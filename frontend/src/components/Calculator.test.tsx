@@ -1,27 +1,14 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { clickKeys, displayedValue, replyWith } from '../test/calculator'
 import { Calculator } from './Calculator'
-
-function replyWith(status: number, body: object) {
-  return vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(JSON.stringify(body), { status }))
-}
-
-function displayedValue() {
-  return screen.getByRole('status').textContent
-}
-
-async function clickKeys(user: ReturnType<typeof userEvent.setup>, ...names: string[]) {
-  for (const name of names) {
-    await user.click(screen.getByRole('button', { name }))
-  }
-}
 
 afterEach(() => {
   vi.restoreAllMocks()
 })
 
-describe('Calculator', () => {
+describe('Calculator keypad', () => {
   it('shows the result of 10 ÷ 2 clicked on the keypad', async () => {
     const fetchMock = replyWith(200, { result: 5 })
     const user = userEvent.setup()
@@ -45,52 +32,32 @@ describe('Calculator', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('cannot divide by zero')
   })
 
-  it('shows the result of 10 / 2 typed on the keyboard', async () => {
-    replyWith(200, { result: 5 })
+  it.each([
+    ['Add', '12 +'],
+    ['Subtract', '12 -'],
+    ['Multiply', '12 ×'],
+    ['Percent of', '12 % of'],
+  ])('chooses an operator with the %s button', async (name, expression) => {
     const user = userEvent.setup()
     render(<Calculator />)
 
-    await user.keyboard('10/2{Enter}')
+    await clickKeys(user, '1', '2', name)
 
-    await waitFor(() => expect(displayedValue()).toBe('5'))
+    expect(screen.getByText(expression)).toBeInTheDocument()
   })
 
-  it('shows the backend message for 1 / 0 typed on the keyboard', async () => {
-    replyWith(422, { error: { code: 'DIVISION_BY_ZERO', message: 'cannot divide by zero' } })
+  it.each([
+    ['Toggle sign', '-12'],
+    ['Backspace', '1'],
+    ['Clear', '0'],
+    ['Decimal point', '12.'],
+  ])('edits the number with the %s button', async (name, value) => {
     const user = userEvent.setup()
     render(<Calculator />)
 
-    await user.keyboard('1/0{Enter}')
+    await clickKeys(user, '1', '2', name)
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('cannot divide by zero')
-  })
-
-  it('does not type a clicked digit again when Enter is pressed', async () => {
-    const fetchMock = vi.spyOn(globalThis, 'fetch')
-    const user = userEvent.setup()
-    render(<Calculator />)
-
-    await clickKeys(user, '7')
-    expect(screen.getByRole('button', { name: '7' })).toHaveFocus()
-    await user.keyboard('{Enter}')
-
-    expect(displayedValue()).toBe('7')
-    expect(fetchMock).not.toHaveBeenCalled()
-  })
-
-  it('handles Backspace and Escape, and leaves shortcuts with Ctrl to the browser', async () => {
-    const user = userEvent.setup()
-    render(<Calculator />)
-
-    await user.keyboard('123{Backspace}')
-    expect(displayedValue()).toBe('12')
-
-    await user.keyboard('{Control>}-{/Control}')
-    expect(screen.getByRole('button', { name: 'Equals' })).toBeDisabled()
-    expect(screen.queryByText('12 -')).not.toBeInTheDocument()
-
-    await user.keyboard('{Escape}')
-    expect(displayedValue()).toBe('0')
+    expect(displayedValue()).toBe(value)
   })
 
   it('disables every key while a request is in flight', async () => {
