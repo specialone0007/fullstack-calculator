@@ -24,6 +24,15 @@ describe('Calculator keyboard', () => {
     expect(screen.getByText(expression)).toBeInTheDocument()
   })
 
+  it('types every digit with the digit keys', async () => {
+    const user = userEvent.setup()
+    render(<Calculator />)
+
+    await user.keyboard('1234567890')
+
+    expect(displayedValue()).toBe('1234567890')
+  })
+
   it('types a decimal point with the . key', async () => {
     const user = userEvent.setup()
     render(<Calculator />)

@@ -60,6 +60,15 @@ describe('Calculator keypad', () => {
     expect(displayedValue()).toBe(value)
   })
 
+  it('types every digit with the digit buttons', async () => {
+    const user = userEvent.setup()
+    render(<Calculator />)
+
+    await clickKeys(user, ...'1234567890')
+
+    expect(displayedValue()).toBe('1234567890')
+  })
+
   it('disables every key while a request is in flight', async () => {
     let answer: (response: Response) => void = () => {}
     vi.spyOn(globalThis, 'fetch').mockReturnValue(new Promise((resolve) => (answer = resolve)))
