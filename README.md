@@ -260,6 +260,7 @@ The first opens the backend report in the browser. The second writes the fronten
 │       ├── components/       the calculator, its display and its keypad
 │       └── test/             helpers and setup for the tests
 ├── docs/coverage/            saved coverage summaries
+├── docs/prompts.md           the prompts and the AI workflow
 └── Dockerfile                one image for the frontend and the backend
 ```
 
@@ -294,4 +295,4 @@ The assignment asked for clarity over extra features.
 
 ## How AI was used
 
-This project was built with Claude Code. The work was planned first, then built in three pull requests: the backend, the frontend, and the Docker image with this README. Each pull request went through a critic review, and the prompts are shared with the submission.
+This project was built with Claude Code. The work was planned first, then built in three pull requests: the backend, the frontend, and the Docker image with this README. Each pull request went through a critic review. The prompts and the workflow are in [docs/prompts.md](docs/prompts.md).
