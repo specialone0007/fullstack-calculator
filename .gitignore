@@ -1,0 +1,13 @@
+# Go
+backend/bin/
+*.out
+*.test
+
+# Node
+node_modules/
+frontend/dist/
+frontend/coverage/
+
+# Local
+.env
+.DS_Store
