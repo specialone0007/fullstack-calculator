@@ -52,6 +52,16 @@ describe('Calculator keyboard', () => {
     await waitFor(() => expect(displayedValue()).toBe('5'))
   })
 
+  it('shows the result of 2 + 3 when = is typed on the keyboard', async () => {
+    replyWith(200, { result: 5 })
+    const user = userEvent.setup()
+    render(<Calculator />)
+
+    await user.keyboard('2+3=')
+
+    await waitFor(() => expect(displayedValue()).toBe('5'))
+  })
+
   it('shows the backend message for 1 / 0 typed on the keyboard', async () => {
     replyWith(422, { error: { code: 'DIVISION_BY_ZERO', message: 'cannot divide by zero' } })
     const user = userEvent.setup()
