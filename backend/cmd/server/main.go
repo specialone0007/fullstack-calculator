@@ -11,21 +11,30 @@ import (
 )
 
 func main() {
-	server := newServer(os.Getenv("PORT"))
+	server := newServer(os.Getenv("PORT"), os.Getenv("STATIC_DIR"))
 
 	log.Printf("calculator listening on %s", server.Addr)
 	log.Fatal(server.ListenAndServe())
 }
 
 // newServer returns the calculator's HTTP server. It listens on port, or on
-// 8080 when port is empty.
-func newServer(port string) *http.Server {
+// 8080 when port is empty. When staticDir is not empty, the server also
+// serves the files in staticDir at /, so one origin holds the frontend and
+// the API.
+func newServer(port, staticDir string) *http.Server {
 	if port == "" {
 		port = "8080"
 	}
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /api/v1/calculate", api.HandleCalculate)
+	if staticDir != "" {
+		// Any other method on the API path gets 405, as it does without a
+		// static folder, instead of falling through to the file server.
+		mux.HandleFunc("/api/v1/calculate", methodNotAllowed)
+		// A request that matches no API route reaches the file server.
+		mux.Handle("/", http.FileServer(http.Dir(staticDir)))
+	}
 
 	return &http.Server{
 		Addr:         ":" + port,
@@ -33,4 +42,10 @@ func newServer(port string) *http.Server {
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
+}
+
+// methodNotAllowed answers 405 for a method the calculate route does not take.
+func methodNotAllowed(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Allow", http.MethodPost)
+	http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 }
