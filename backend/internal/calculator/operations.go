@@ -47,9 +47,18 @@ func power(a, b float64) (float64, error) {
 	return math.Pow(a, b), nil
 }
 
-// percentage returns a percent of b.
+// percentage returns a percent of b, which is (a / 100) * b.
+//
+// It multiplies before it divides, because a / 100 rounds for most a:
+// (29 / 100) * 100 gives 28.999999999999996, while 29 * 100 / 100 gives 29.
 func percentage(a, b float64) (float64, error) {
-	return (a / 100) * b, nil
+	product := a * b
+	if math.IsInf(product, 0) {
+		// a * b is too large for a float64 even when the answer is not,
+		// so divide first instead.
+		return (a / 100) * b, nil
+	}
+	return product / 100, nil
 }
 
 // squareRoot ignores b.

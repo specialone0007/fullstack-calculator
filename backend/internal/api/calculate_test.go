@@ -43,6 +43,7 @@ func TestHandleCalculateReturnsResult(t *testing.T) {
 		{"divide divides a by b", `{"operation":"divide","a":10,"b":2}`, `{"result":5}`},
 		{"power raises a to b", `{"operation":"power","a":2,"b":8}`, `{"result":256}`},
 		{"percentage takes a percent of b", `{"operation":"percentage","a":15,"b":200}`, `{"result":30}`},
+		{"percentage of 29 of 100 is exactly 29", `{"operation":"percentage","a":29,"b":100}`, `{"result":29}`},
 		{"sqrt takes the root of a without b", `{"operation":"sqrt","a":9}`, `{"result":3}`},
 		{"sqrt ignores b when it is sent", `{"operation":"sqrt","a":9,"b":100}`, `{"result":3}`},
 		{"b = 0 is a real operand, not a missing one", `{"operation":"add","a":1,"b":0}`, `{"result":1}`},
