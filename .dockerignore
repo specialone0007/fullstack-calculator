@@ -1,0 +1,9 @@
+# Only the source the image builds from goes into the build context.
+.git
+**/node_modules
+frontend/dist
+frontend/coverage
+backend/bin
+docs
+*.md
+.env
