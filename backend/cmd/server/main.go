@@ -29,6 +29,9 @@ func newServer(port, staticDir string) *http.Server {
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /api/v1/calculate", api.HandleCalculate)
 	if staticDir != "" {
+		// Any other method on the API path gets 405, as it does without a
+		// static folder, instead of falling through to the file server.
+		mux.HandleFunc("/api/v1/calculate", methodNotAllowed)
 		// A request that matches no API route reaches the file server.
 		mux.Handle("/", http.FileServer(http.Dir(staticDir)))
 	}
@@ -39,4 +42,10 @@ func newServer(port, staticDir string) *http.Server {
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
+}
+
+// methodNotAllowed answers 405 for a method the calculate route does not take.
+func methodNotAllowed(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Allow", http.MethodPost)
+	http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 }

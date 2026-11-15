@@ -87,6 +87,18 @@ func TestNewServerServesStaticDirAtRoot(t *testing.T) {
 			t.Errorf("body = %s, want %s", gotBody, `{"result":42}`)
 		}
 	})
+
+	t.Run("GET /api/v1/calculate gets 405, not the file server", func(t *testing.T) {
+		recorder := httptest.NewRecorder()
+		handler.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/api/v1/calculate", nil))
+
+		if recorder.Code != http.StatusMethodNotAllowed {
+			t.Errorf("status = %d, want %d", recorder.Code, http.StatusMethodNotAllowed)
+		}
+		if allow := recorder.Header().Get("Allow"); allow != http.MethodPost {
+			t.Errorf("Allow = %q, want %q", allow, http.MethodPost)
+		}
+	})
 }
 
 func TestNewServerWithoutStaticDirServesNoFiles(t *testing.T) {

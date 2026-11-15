@@ -1,5 +1,6 @@
 github.com/specialone0007/fullstack-calculator/backend/cmd/server/main.go:13:			main			0.0%
 github.com/specialone0007/fullstack-calculator/backend/cmd/server/main.go:24:			newServer		100.0%
+github.com/specialone0007/fullstack-calculator/backend/cmd/server/main.go:48:			methodNotAllowed	100.0%
 github.com/specialone0007/fullstack-calculator/backend/internal/api/calculate.go:39:		HandleCalculate		100.0%
 github.com/specialone0007/fullstack-calculator/backend/internal/api/calculate.go:57:		decodeCalculateRequest	100.0%
 github.com/specialone0007/fullstack-calculator/backend/internal/api/errors.go:41:		writeCalculatorError	100.0%
@@ -15,4 +16,4 @@ github.com/specialone0007/fullstack-calculator/backend/internal/calculator/opera
 github.com/specialone0007/fullstack-calculator/backend/internal/calculator/operations.go:46:	power			100.0%
 github.com/specialone0007/fullstack-calculator/backend/internal/calculator/operations.go:54:	percentage		100.0%
 github.com/specialone0007/fullstack-calculator/backend/internal/calculator/operations.go:65:	squareRoot		100.0%
-total:												(statements)		95.7%
+total:												(statements)		95.9%
