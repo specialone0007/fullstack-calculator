@@ -30,6 +30,7 @@ const KEYBOARD_ACTIONS: Record<string, KeyAction | undefined> = {
   '/': { type: 'operatorPressed', operator: 'divide' },
   '^': { type: 'operatorPressed', operator: 'power' },
   '%': { type: 'operatorPressed', operator: 'percentage' },
+  '=': { type: 'equalsPressed' },
   Enter: { type: 'equalsPressed' },
   Backspace: { type: 'backspacePressed' },
   Escape: { type: 'clearPressed' },

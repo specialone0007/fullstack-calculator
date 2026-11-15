@@ -225,7 +225,7 @@ npm run coverage
 | Part     | Coverage |
 |----------|----------|
 | Backend  | 95.9% of statements. The `api` and `calculator` packages are at 100%. `cmd/server` is at 76.9%, because the tests call `newServer` but not `main`. |
-| Frontend | 99.24% of statements, 98.29% of branches, 100% of functions, 100% of lines. The frontend test run has 85 tests. |
+| Frontend | 99.24% of statements, 98.29% of branches, 100% of functions, 100% of lines. The frontend test run has 86 tests. |
 
 The saved summaries are [docs/coverage/backend.txt](docs/coverage/backend.txt) and [docs/coverage/frontend.txt](docs/coverage/frontend.txt). The frontend summary lists only the files below 100%.
 
